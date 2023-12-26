@@ -2,8 +2,8 @@ import { User } from './interface';
 
 export const admin: User = {
   id: 1,
-  name: 'Siemhong',
-  email: 'siemhong.em@pse.ngo',
+  name: 'Admin',
+  email: 'admin@example.com',
   avatar: './assets/images/avatar.jpg',
 };
 
