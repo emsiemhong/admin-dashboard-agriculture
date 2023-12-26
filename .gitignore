@@ -19,7 +19,6 @@
 test-results.xml
 
 # environment files
-/src/environments/*.ts
 
 # Other
 .DS_Store
