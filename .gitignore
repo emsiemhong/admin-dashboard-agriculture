@@ -1,0 +1,26 @@
+# dependencies
+/node_modules
+
+/.angular
+
+# compiled output
+/dist
+/tmp
+
+# IDEs and editors
+/.idea
+/.vscode
+*.swp
+*.swo
+*.swn
+
+# logs and test results
+*.log
+test-results.xml
+
+# environment files
+/src/environments/*.ts
+
+# Other
+.DS_Store
+Thumbs.db

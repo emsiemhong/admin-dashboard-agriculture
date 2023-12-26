@@ -1,0 +1,31 @@
+.mat-mdc-button-base {
+  margin: 4px;
+}
+
+
+.total-summary {
+  display: flex;
+  gap: 20px;
+  margin: 0 auto;
+  max-width: 1000px;
+  text-align: center;
+  justify-content: space-evenly;
+}
+
+mat-card.mat-mdc-card.mdc-card {
+  width: 250px;
+  height: 150px;
+}
+
+mat-card-content.mat-mdc-card-content {
+  position: relative;
+}
+
+.title {
+  position: absolute;
+}
+
+h2 {
+  font-size: 40px;
+  text-align: center;
+}
