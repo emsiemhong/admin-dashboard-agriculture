@@ -58,7 +58,7 @@
   <mat-icon class="menu-icon" *ngIf="level===0">{{item.icon}}</mat-icon>
   <span class="menu-name">{{item.name | translate}}</span>
   <span class="menu-label bg-{{item.label.color}}" *ngIf="item.label">{{item.label.value}}</span>
-  <span class="menu-badge bg-{{item.badge.color}}" *ngIf="item.badge">{{item.badge.value}}</span>
+  <!-- <span class="menu-badge bg-{{item.badge.color}}" *ngIf="item.badge">{{item.badge.value}}</span> -->
   <mat-icon class="menu-caret" *ngIf="item.type!=='link'">
     {{item.type==='sub' ? 'arrow_drop_down' : 'launch'}}
   </mat-icon>
