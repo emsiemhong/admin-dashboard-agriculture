@@ -1,9 +1,9 @@
 import {
+  AfterViewInit,
   Component,
+  NgZone,
   OnInit,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 import { DashboardService } from './dashboard.service';
 
@@ -11,21 +11,13 @@ import { DashboardService } from './dashboard.service';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DashboardService],
 })
-export class DashboardComponent implements OnInit {
-  // dataSource = this.dashboardSrv.getData();
+export class DashboardComponent implements OnInit, AfterViewInit {
 
-  // messages = this.dashboardSrv.getMessages();
+  displayedColumns: string[] = ['position', 'product_name', 'sale_quantity', 'sale_amount'];
+  dataSource:any = [];
 
-  // charts = this.dashboardSrv.getCharts();
-  // chart1: any;
-  // chart2: any;
-
-  // stats = this.dashboardSrv.getStats();
-
-  // notifySubscription!: Subscription;
   users:any[] = [];
   products:any[] = [];
   categories:any[] = [];
@@ -33,7 +25,10 @@ export class DashboardComponent implements OnInit {
   totalProduct: number = 0;
   totalCategories: number = 0;
 
+  chart1: any;
+  chart2: any;
   constructor(
+    private ngZone: NgZone,
     private dashboardSrv: DashboardService,
   ) {}
 
@@ -46,7 +41,11 @@ export class DashboardComponent implements OnInit {
     this.getTotalProducts();
     this.getTotalUsers();
     this.getTotalCategories();
+    this.getTopProductSales();
+  }
 
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => this.initChart());
   }
 
   getTotalProducts() {
@@ -74,7 +73,6 @@ export class DashboardComponent implements OnInit {
   getTotalCategories() {
     this.dashboardSrv.getTotalCategories().subscribe({
       next: (res) => {
-        console.log('res:::', res);
         this.totalCategories = res?.totalCategories
       },
       error: (err) => {
@@ -109,6 +107,95 @@ export class DashboardComponent implements OnInit {
     this.dashboardSrv.getCategories().subscribe({
       next: (res) => {
         this.categories = res
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  getTopProductSales() {
+    this.dashboardSrv.getTopProductSales().subscribe({
+      next: (res) => {
+        this.dataSource = res;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+
+  initChart() {
+
+    this.dashboardSrv.getSalesByCategory().subscribe({
+      next: (res) => {
+
+        let chartOption = {
+          series: res?.map((d: { total_sales_amount: number; }) => Number(d?.total_sales_amount)),
+          chart: {
+            width: 380,
+            type: 'pie',
+          },
+          labels: res?.map(((d: { category_name: string; }) => d?.category_name)),
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+        };
+
+        this.chart1 = new ApexCharts(document.querySelector('#chart1'), chartOption);
+        this.chart1?.render();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+
+    this.dashboardSrv.getSalesByMonth().subscribe({
+      next: (res) => {
+
+        let chartOption = {
+          series: [{
+            name: "Desktops",
+            data: res?.map((d: { total_sales_amount: any; }) => d?.total_sales_amount)
+          }],
+          chart: {
+            height: 350,
+            type: 'line',
+            zoom: {
+              enabled: false
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            curve: 'straight'
+          },
+          title: {
+            align: 'left'
+          },
+          grid: {
+            row: {
+              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+              opacity: 0.5
+            },
+          },
+          xaxis: {
+            categories: res?.map((d: { sales_month: any; }) => d.sales_month),
+          }
+        };
+
+        this.chart2 = new ApexCharts(document.querySelector('#chart2'), chartOption);
+        this.chart2?.render();
       },
       error: (err) => {
         console.log(err);

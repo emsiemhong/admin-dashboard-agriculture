@@ -35,4 +35,16 @@ export class DashboardService {
   getTotalCategories(): Observable<any> {
     return this.http.get<any[]>(`${this.baseURL}/totalCategories`);
   }
+
+  getTopProductSales(): Observable<any> {
+    return this.http.get<any[]>(`${this.baseURL}/topProductSales`);
+  }
+
+  getSalesByCategory(): Observable<any> {
+    return this.http.get<any[]>(`${this.baseURL}/salesByCategory`);
+  }
+
+  getSalesByMonth(): Observable<any> {
+    return this.http.get<any[]>(`${this.baseURL}/salesByMonth`);
+  }
 }
